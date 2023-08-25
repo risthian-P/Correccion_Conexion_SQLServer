@@ -184,7 +184,73 @@ public class formulario {
         actualizarElPresenteRegistroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    String DB_url = "jdbc:sqlserver://localhost:1433;databaseName=FORMULARIO;encrypt=true;trustServerCertificate=true";
+                    String usuario = "java_conn";
+                    String contrasena = "java_conn";
+                    String Scodigo = textCodigo.getText().toString();
+                    String Sid = textCedula.getText().toString();
+                    String Snombre = textNombre.getText().toString();
+                    String Sfecha = textFecha.getText().toString();
+                    String Ssigno = SignoComboBox.getSelectedItem().toString();
 
+                    String query = "Update registro set codigo = ?, id = ?, nombre = ?, fecha_nacimiento = ?, signo = ? where codigo = ?";
+
+                    Connection conectar = DriverManager.getConnection(DB_url,usuario,contrasena);
+                    PreparedStatement upstatement = conectar.prepareStatement(query);
+
+                    upstatement.setString(1, Scodigo);
+                    upstatement.setString(2,Sid);
+                    upstatement.setString(3, Snombre);
+                    upstatement.setString(4, Sfecha);
+                    upstatement.setString(5, Ssigno);
+                    upstatement.setString(6, Scodigo);
+
+                    int filasactualizada = upstatement.executeUpdate();
+
+                    if (filasactualizada > 0){
+                        System.out.println("Actualizacion exitosa");
+                    }else {
+                        System.out.println("No se encontró el ID proporcionado");
+                    }
+                    upstatement.close();
+                    conectar.close();
+
+                }
+                catch (SQLException m){
+                    throw new RuntimeException(m);
+                }
+            }
+        });
+        borrarElPresenteRegistroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String DB_url = "jdbc:sqlserver://localhost:1433;databaseName=FORMULARIO;encrypt=true;trustServerCertificate=true";
+                    String usuario = "java_conn";
+                    String contrasena = "java_conn";
+                    String CodigoBorrar = textCodigo.getText().toString();
+
+                    String query = "delete from registro where codigo = ?";
+
+                    Connection conectar = DriverManager.getConnection(DB_url,usuario,contrasena);
+                    PreparedStatement statement = conectar.prepareStatement(query);
+                    statement.setString(1, CodigoBorrar);
+                    int filasafectadas = statement.executeUpdate();
+
+
+                    if (filasafectadas > 0){
+                        System.out.println("Eliminación exitosa");
+                    } else {
+                        System.out.println("No se encontró ningun dato en el ID proporcionado");
+                    }
+
+                    statement.close();
+                    conectar.close();
+                }
+                catch (SQLException m){
+                    throw new RuntimeException(m);
+                }
             }
         });
     }
