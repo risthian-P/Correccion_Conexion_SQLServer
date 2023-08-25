@@ -44,4 +44,18 @@ y aplastamos en reiniciar para agregar los cambios, finalmente aplicamos y acept
 
 ![img_9.png](img_9.png)
 
+Ahora en Intellij Idea escribimos el siguiente comando, en una función para realizar la conexion:
+
+![img_10.png](img_10.png)
+
+Es importante mencionar que para realizar la conexió, nos menciona una autentificacion de seguridad propio de SQL Server,
+"jdbc:sqlserver://localhost:1433;databaseName=FORMULARIO;encrypt=true;trustServerCertificate=true", una vez realizado esto 
+debería poder coenctarnos a la base de datos.
+
+![img_11.png](img_11.png)
+
+Finalmente realizamos las diferentes funciones que cada uno de los botones va a realizar, que se encuentran en el código. 
+
+![img_12.png](img_12.png)
+![img_14.png](img_14.png)
 
