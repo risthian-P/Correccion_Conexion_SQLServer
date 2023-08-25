@@ -27,41 +27,91 @@ public class formulario {
                 textNombre.setText("");
                 textFecha.setText("");
                 SignoComboBox.setSelectedItem("--Seleccionar--");
-                //falta setear el valor del signo
-                System.out.println(SignoComboBox.getSelectedIndex());
+                System.out.println("Limpieza Exitosa");
             }
         });
-    }
-    private Connection establecerConexion() {
-        String DB_url = "jdbc:sqlserver://localhost:1433;databaseName=FORMULARIO;encrypt=true;trustServerCertificate=true";
-        String usuario = "java_conn";
-        String contrasena = "java_conn";
-        String query = "Select * from registro";
-        Connection conectar;
-        try {
-            conectar = DriverManager.getConnection(DB_url, usuario, contrasena);
-            Statement stmt = conectar.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            System.out.println("conexion exitosa");
-            while (rs.next()) {
-                System.out.println("\nid: " + rs.getString("id"));
-                System.out.println("nombre: " + rs.getString("nombre"));
-                System.out.println("apellido: " + rs.getString("apellido"));
-                System.out.println("edad: " + rs.getBigDecimal("edad"));
-                System.out.println("profesion: " + rs.getString("profesion"));
+        ingresarElPresenteRegistroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                String DB_url = "jdbc:sqlserver://localhost:1433;databaseName=FORMULARIO;encrypt=true;trustServerCertificate=true";
+                String usuario = "java_conn";
+                String contrasena = "java_conn";
+                String Scodigo = textCodigo.getText().toString();
+                String Sid = textCedula.getText().toString();
+                String Snombre = textNombre.getText().toString();
+                String Sfecha = textFecha.getText().toString();
+                String Ssigno = SignoComboBox.getSelectedItem().toString();
+
+                String query = "insert into registro (codigo, id, nombre, fecha_nacimiento, signo) values (?,?,?,?,?)";
+
+                Connection conectar = DriverManager.getConnection(DB_url,usuario,contrasena);
+                PreparedStatement statement = conectar.prepareStatement(query);
+                statement.setString(1, Scodigo);
+                statement.setString(2, Sid);
+                statement.setString(3,Snombre);
+                statement.setString(4, Sfecha);
+                statement.setString(5, Ssigno);
+                statement.executeUpdate();
+                statement.close();
+                conectar.close();
+                System.out.println("Ingreso Exitoso");
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return conectar;
+            catch (SQLException m){
+                throw new RuntimeException(m);
+            }
+            }
+        });
+        buscarPorCódigoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String DB_url = "jdbc:sqlserver://localhost:1433;databaseName=FORMULARIO;encrypt=true;trustServerCertificate=true";
+                    String usuario = "java_conn";
+                    String contrasena = "java_conn";
+                    String CodigoRecuperar = textCodigo.getText().toString();
+                    String arg = "Select * from registro where codigo = "+ CodigoRecuperar + ";";
+                    String query = arg;
+
+                    Connection conectar = DriverManager.getConnection(DB_url,usuario,contrasena);
+                    Statement stmt = conectar.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+
+                    if (rs.next()){
+                        String idRec = rs.getString("id");
+                        String nombreRec = rs.getString("nombre");
+                        String fechaRec = rs.getString("fecha_nacimiento");
+                        String signoRec = rs.getString("signo");
+
+                        textCedula.setText(idRec);
+                        textNombre.setText(nombreRec);
+                        textFecha.setText(String.valueOf(fechaRec));
+                        SignoComboBox.setSelectedItem(signoRec);
+
+                        System.out.println("Se encontro el registro");
+                    } else {
+                        System.out.println("No se encontro el registro ingresado");
+                    }
+
+                    stmt.close();
+                    rs.close();
+                    conectar.close();
+                }
+                catch (SQLException m){
+                    throw new RuntimeException(m);
+                }
+            }
+
+        });
     }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("formulario");
         frame.setContentPane(new formulario().rootPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        formulario conn = new formulario();
+        Cconection conn = new Cconection();
         conn.establecerConexion();
     }
 }
