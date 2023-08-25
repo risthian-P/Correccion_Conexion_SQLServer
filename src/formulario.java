@@ -103,6 +103,90 @@ public class formulario {
             }
 
         });
+        buscarPorNombreButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String DB_url = "jdbc:sqlserver://localhost:1433;databaseName=FORMULARIO;encrypt=true;trustServerCertificate=true";
+                    String usuario = "java_conn";
+                    String contrasena = "java_conn";
+                    String NombreRecuperar = textNombre.getText().toString();
+                    String arg = "select * from registro where nombre = "+ "'" + NombreRecuperar  + "'" + " ;";
+                    String query = arg;
+                    Connection conectar = DriverManager.getConnection(DB_url,usuario,contrasena);
+                    Statement stmt = conectar.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+
+                    if (rs.next()){
+                        String codRec = rs.getString("codigo");
+                        String idRec = rs.getString("id");
+                        String fechaRec = rs.getString("fecha_nacimiento");
+                        String signoRec = rs.getString("signo");
+
+                        textCodigo.setText(codRec);
+                        textCedula.setText(idRec);
+                        textFecha.setText(fechaRec);
+                        SignoComboBox.setSelectedItem(signoRec);
+
+                        System.out.println("Se encontro el registro");
+                    } else {
+                        System.out.println("No se encontro el registro ingresado");
+                    }
+
+                    stmt.close();
+                    rs.close();
+                    conectar.close();
+                }
+                catch (SQLException m){
+                    throw new RuntimeException(m);
+                }
+            }
+        });
+        buscarPorSignoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String DB_url = "jdbc:sqlserver://localhost:1433;databaseName=FORMULARIO;encrypt=true;trustServerCertificate=true";
+                    String usuario = "java_conn";
+                    String contrasena = "java_conn";
+                    String SignoRecuperar = SignoComboBox.getSelectedItem().toString();
+                    String arg = "select * from registro where signo = "+ "'" + SignoRecuperar  + "'" + " ;";
+                    String query = arg;
+                    Connection conectar = DriverManager.getConnection(DB_url,usuario,contrasena);
+                    Statement stmt = conectar.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+
+                    if (rs.next()){
+                        String codRec = rs.getString("codigo");
+                        String idRec = rs.getString("id");
+                        String fechaRec = rs.getString("fecha_nacimiento");
+                        String nombreRec = rs.getString("nombre");
+
+                        textCodigo.setText(codRec);
+                        textCedula.setText(idRec);
+                        textFecha.setText(fechaRec);
+                        textNombre.setText(nombreRec);
+
+                        System.out.println("Se encontro el registro");
+                    } else {
+                        System.out.println("No se encontro el registro ingresado");
+                    }
+
+                    stmt.close();
+                    rs.close();
+                    conectar.close();
+                }
+                catch (SQLException m){
+                    throw new RuntimeException(m);
+                }
+            }
+        });
+        actualizarElPresenteRegistroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     public static void main(String[] args) {
